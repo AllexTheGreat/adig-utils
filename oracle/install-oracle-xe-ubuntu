@@ -1,0 +1,90 @@
+
+
+#### LINK TO FOLLOW ####
+http://blog.whitehorses.nl/2014/03/18/installing-java-oracle-11g-r2-express-edition-and-sql-developer-on-ubuntu-64-bit/
+
+
+#### Install JAVA ####
+
+    1 - sudo apt-get install java
+    2 - java -version
+
+
+#### Install Oracle-XE ####
+
+    1  - sudo apt-get install alien libaio1 unixodbc
+    2  - Download oracle xe package  ->  http://www.oracle.com/technetwork/database/database-technologies/express-edition/downloads/index.html
+    3  - Navigate to the download folder -> unzip oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+    4  - A new directory (Disk1) is added to the Download directory. Navigate to this directory:  ->  cd Disk1
+    5  - sudo alien --scripts -d oracle-xe-11.2.0-1.0.x86_64.rpm
+    6  - sudo gedit /sbin/chkconfig
+
+          #!/bin/bash
+          # Oracle 11gR2 XE installer chkconfig hack for Ubuntu
+          file=/etc/init.d/oracle-xe
+          if [[ ! `tail -n1 $file | grep INIT` ]]; then
+          echo >> $file
+          echo '### BEGIN INIT INFO' >> $file
+          echo '# Provides: OracleXE' >> $file
+          echo '# Required-Start: $remote_fs $syslog' >> $file
+          echo '# Required-Stop: $remote_fs $syslog' >> $file
+          echo '# Default-Start: 2 3 4 5' >> $file
+          echo '# Default-Stop: 0 1 6' >> $file
+          echo '# Short-Description: Oracle 11g Express Edition' >> $file
+          echo '### END INIT INFO' >> $file
+          fi
+          update-rc.d oracle-xe defaults 80 01
+          #EOF
+
+    7  - sudo chmod 755 /sbin/chkconfig
+    8  - sudo gedit /etc/sysctl.d/60-oracle.conf
+
+          # Oracle 11g XE kernel parameters  
+          fs.file-max=6815744  
+          net.ipv4.ip_local_port_range=9000 65000  
+          kernel.sem=250 32000 100 128 
+          kernel.shmmax=536870912
+
+    9  - sudo service procps start
+    10 - sudo sysctl -q fs.file-max  ->  fs.file-max = 6815744
+    11 - sudo ln -s /usr/bin/awk /bin/awk
+         mkdir /var/lock/subsys
+         touch /var/lock/subsys/listener
+    12 - sudo dpkg --install oracle-xe_11.2.0-2_amd64.deb
+    13 - sudo rm -rf /dev/shm
+         sudo mkdir /dev/shm
+         sudo mount -t tmpfs shmfs -o size=4096m /dev/shm
+    14 - sudo gedit /etc/rc2.d/S01shm_load
+
+         #!/bin/sh
+         case "$1" in
+         start) mkdir /var/lock/subsys 2>/dev/null
+         touch /var/lock/subsys/listener
+         rm /dev/shm 2>/dev/null
+         mkdir /dev/shm 2>/dev/null
+         mount -t tmpfs shmfs -o size=4096m /dev/shm ;;
+         *) echo error
+         exit 1 ;;
+         esac
+
+    15 - sudo chmod 755 /etc/rc2.d/S01shm_load
+
+
+#### Configure Oracle-XE ####
+
+    1  - sudo /etc/init.d/oracle-xe configure
+    2  - sudo gedit /etc/bash.bashrc
+
+         export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+         export ORACLE_SID=XE
+         export NLS_LANG=`$ORACLE_HOME/bin/nls_lang.sh`
+         export ORACLE_BASE=/u01/app/oracle
+         export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+         export PATH=$ORACLE_HOME/bin:$PATH
+
+    3  - source /etc/bash.bashrc
+    4  - echo $ORACLE_HOME  ->  /u01/app/oracle/product/11.2.0/xe
+    5  - sudo service oracle-xe start
+
+
+

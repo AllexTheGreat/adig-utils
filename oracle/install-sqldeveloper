@@ -1,0 +1,10 @@
+
+
+#### Install SqlDeveloper ####
+
+    1  - Download swldeveloper package  ->  http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html
+    2  - Navigate to download directory  ->  sudo alien --scripts -d sqldeveloper-4.0.0.13.80-1.noarch.rpm
+    3  - sudo dpkg --install sqldeveloper_4.0.0.13.80-2_all.deb
+    4  - sudo mkdir <path/.sqldeveloper>
+    5  - sudo /opt/sqldeveloper/sqldeveloper.sh 
+    6  - /usr/lib/jvm/java-7-oracle

@@ -1,0 +1,7 @@
+
+
+ENVIRONMENT VARS (JAVA_HOME, ORACLE_HOME)
+    sudo gedit /etc/bash.bashrc 
+
+CONVERT FROM RPM TO DEB (Convert the Red Hat package to a Ubuntu package)
+    sudo alien --scripts -d <rpmFile>
