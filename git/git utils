@@ -1,0 +1,10 @@
+** Flow for first commit **
+
+    1 - Create repo on github
+    2 - Navigate to desired local folder
+    3 - Clone repository -> git clone <repoUrl>
+    4 - Create desired branch -> git checkout -b <branchName>
+    5 - Add files -> git add *
+    6 - Commit the files -> git commit -m 'message'
+    7 - Create branch on remote repo -> git remote add <branchName> <repoUrl>
+    8 - Push from local branch to remote brach and track it -> git push --set-upstream <localBranchName> <remoteBranchName>
